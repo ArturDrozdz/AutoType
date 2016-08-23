@@ -18,9 +18,17 @@ var AutoType = (function () {
     var init = function () {
         this.letter_index = 0;
 
+        attach_elements.call(this);
         prepare_content.call(this);
         setup_cursor.call(this);
         run_typing.call(this);
+    }
+
+    var attach_elements = function () {
+        this.content_span = document.createElement('span');
+        this.container.appendChild(this.content_span);
+        this.cursor_span = document.createElement('span');
+        this.container.appendChild(this.cursor_span);
     }
 
     var prepare_content = function () {
@@ -57,10 +65,12 @@ var AutoType = (function () {
     }
 
     var render = function () {   
-        var result = this.content.substring(0, this.letter_index) + this.cursor_state;
-        result = result.replace(new RegExp('◄', 'g'), '<br />');
+        var content = this.content.substring(0, this.letter_index);
+        content = content.replace(new RegExp('◄', 'g'), '<br>');
 
-        this.container.innerHTML = result;
+        if(content != this.content_span.innerHTML)
+            this.content_span.innerHTML = content;
+        this.cursor_span.innerHTML =  this.cursor_state;
     }
 
     return AutoType;
