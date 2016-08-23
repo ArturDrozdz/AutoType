@@ -1,7 +1,7 @@
 var AutoType = (function () {
 
     // constructor
-    function Typer(container, content, options) {
+    function AutoType(container, content, options) {
         this.container = document.getElementById(container);
         this.content = content;
         
