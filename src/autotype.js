@@ -18,10 +18,11 @@ var AutoType = (function () {
 
     var setup_options = function(options) {
         this.options = {
-            cursor: options.cursor ? options.cursor : '▓',
-            typing_speed: options.typing_speed ? options.typing_speed : 30,
-            cursor_speed: options.cursor_speed ? options.cursor_speed: 400,
-            start_delay: options.start_delay ? options.start_delay : 2000
+            cursor: options.cursor || '▓',
+            typing_speed: options.typing_speed || 30,
+            cursor_speed: options.cursor_speed || 400,
+            start_delay: options.start_delay || 2000,
+            kill_cursor: options.kill_cursor || false
         };
     }
 
@@ -48,7 +49,14 @@ var AutoType = (function () {
 
     var setup_cursor = function () {
         var self = this;
-        setInterval(function () { switch_cursor.call(self) }, this.options.cursor_speed);
+        this.cursor_interval = setInterval(function () { switch_cursor.call(self) }, this.options.cursor_speed);
+    }
+
+    var kill_cursor = function () {
+        if(this.options.kill_cursor) {
+            clearInterval(this.cursor_interval);
+            this.cursor_state = '&nbsp';
+        }
     }
 
     var run_typing = function () {
@@ -79,6 +87,11 @@ var AutoType = (function () {
 
         if(content.length != this.content_span.innerHTML.length)
             this.content_span.innerHTML = content;
+        
+        if(this.content.length == this.letter_index)
+            kill_cursor.call(this);
+        
+            
         this.cursor_span.innerHTML =  this.cursor_state;
     }
 
