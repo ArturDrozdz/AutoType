@@ -2,16 +2,10 @@ var AutoType = (function () {
 
     // constructor
     function AutoType(container, content, options) {
+        
         this.container = document.getElementById(container);
         this.content = content;
         
-        this.options = {
-            cursor: '▓',
-            typing_speed: 30,
-            cursor_speed: 400,
-            start_delay: 2000
-        };
-
         setup_options.call(this, options);
         init.call(this);
     }
@@ -22,7 +16,8 @@ var AutoType = (function () {
             typing_speed: options.typing_speed || 30,
             cursor_speed: options.cursor_speed || 400,
             start_delay: options.start_delay || 2000,
-            kill_cursor: options.kill_cursor || false
+            kill_cursor: options.kill_cursor || false,
+            finish_callback: options.finish_callback
         };
     }
 
@@ -59,6 +54,11 @@ var AutoType = (function () {
         }
     }
 
+    var call_finish_callback = function () {
+        if(this.options.finish_callback)
+            this.options.finish_callback.call(this);
+    }
+
     var run_typing = function () {
         var self = this;
         setTimeout(function () { setup_timer.call(self) }, this.options.start_delay);
@@ -88,9 +88,11 @@ var AutoType = (function () {
         if(content.length != this.content_span.innerHTML.length)
             this.content_span.innerHTML = content;
         
-        if(this.content.length == this.letter_index)
+        if(this.content.length == this.letter_index) {
+            // rendering is done
             kill_cursor.call(this);
-        
+            call_finish_callback.call(this);
+        }
             
         this.cursor_span.innerHTML =  this.cursor_state;
     }
