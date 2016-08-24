@@ -68,7 +68,7 @@ var AutoType = (function () {
         var content = this.content.substring(0, this.letter_index);
         content = content.replace(new RegExp('◄', 'g'), '<br>');
 
-        if(content != this.content_span.innerHTML)
+        if(content.length != this.content_span.innerHTML.length)
             this.content_span.innerHTML = content;
         this.cursor_span.innerHTML =  this.cursor_state;
     }
